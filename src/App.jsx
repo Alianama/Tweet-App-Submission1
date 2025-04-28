@@ -5,10 +5,12 @@ import Header from './components/header/Header';
 import NavBar from './components/header/Nav';
 import TagBar from './components/header/Tag';
 import MobileNavbar from './components/footer/mobileNavbar';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RegisterForm from './pages/register';
 import { Toaster } from './components/ui/sonner';
 import PropTypes from 'prop-types';
+import LoginForm from './pages/login';
+import { useState, useEffect } from 'react';
 
 function Layout({ children }) {
   return (
@@ -32,6 +34,10 @@ function Layout({ children }) {
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
+};
+
+const isAuthenticated = () => {
+  return localStorage.getItem('userToken') !== null;
 };
 
 function ForYou() {
@@ -58,6 +64,26 @@ function Latest() {
   );
 }
 
+function NotFound() {
+  const [redirecting, setRedirecting] = useState(false);
+
+  useEffect(() => {
+    // Start redirecting after 4 seconds
+    const timer = setTimeout(() => {
+      setRedirecting(true);
+    }, 4000);
+
+    // Clean up the timer if the component unmounts
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (redirecting) {
+    return <Navigate to="/login" />;
+  }
+
+  return <div>Page not found. Redirecting to login...</div>;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -65,28 +91,42 @@ export default function App() {
         <Route
           path="/"
           element={
-            <Layout>
-              <ForYou />
-            </Layout>
+            isAuthenticated() ? (
+              <Layout>
+                <ForYou />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
         <Route
           path="/following"
           element={
-            <Layout>
-              <Following />
-            </Layout>
+            isAuthenticated() ? (
+              <Layout>
+                <Following />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
         <Route
           path="/latest"
           element={
-            <Layout>
-              <Latest />
-            </Layout>
+            isAuthenticated() ? (
+              <Layout>
+                <Latest />
+              </Layout>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
         <Route path="/register" element={<RegisterForm />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
