@@ -1,4 +1,4 @@
-const api = () => {
+const api = (() => {
   const BASE_URL = 'https://forum-api.dicoding.dev/v1';
 
   async function _fetchWithAuth(url, options = {}) {
@@ -6,7 +6,7 @@ const api = () => {
       ...options,
       headers: {
         ...options.headers,
-        Authorization: `Bearer ${getAccessToken}`,
+        Authorization: `Bearer ${getAccessToken()}`,
       },
     });
   }
@@ -31,6 +31,7 @@ const api = () => {
         password,
       }),
     });
+
     const responseJson = await response.json();
     const { status, message } = responseJson;
 
@@ -71,12 +72,29 @@ const api = () => {
     return token;
   }
 
+  async function getOwnProfile() {
+    const response = await _fetchWithAuth(`${BASE_URL}/users/me`);
+    const responseJson = await response.json();
+    const { status, message } = responseJson;
+
+    if (status !== 'success') {
+      throw new Error(message);
+    }
+
+    const {
+      data: { user },
+    } = responseJson;
+
+    return user;
+  }
+
   return {
     putAccessToken,
     getAccessToken,
     register,
     login,
+    getOwnProfile,
   };
-};
+})();
 
 export default api;

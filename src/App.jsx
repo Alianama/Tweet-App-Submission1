@@ -5,24 +5,26 @@ import Header from './components/header/Header';
 import NavBar from './components/header/Nav';
 import TagBar from './components/header/Tag';
 import MobileNavbar from './components/footer/mobileNavbar';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import RegisterForm from './pages/register';
-import { Toaster } from './components/ui/sonner';
-import PropTypes from 'prop-types';
 import LoginForm from './pages/login';
+import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { asyncPreloadProcess } from './store/isPreload/action';
+import Loading from './components/ui/loading';
+// import Loading from './components/ui/Loading'; // Tambahkan sesuai asumsi
 
 function Layout({ children }) {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Toaster />
       <Header />
       <div className="container px-4 mx-auto grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6 py-6">
         <aside className="hidden md:flex flex-col gap-6 h-[calc(100vh-80px)] sticky top-20">
           <NavBar />
           <TagBar />
         </aside>
-        {children}
+        <main>{children}</main>
       </div>
       <MobileNavbar />
       <Button className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg md:flex hidden items-center justify-center bg-purple-600 hover:bg-purple-700">
@@ -36,98 +38,92 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const isAuthenticated = () => {
-  return localStorage.getItem('userToken') !== null;
-};
-
 function ForYou() {
-  return (
-    <div className="space-y-4">
-      <PostList />
-    </div>
-  );
+  return <PostList />;
 }
 
 function Following() {
-  return (
-    <div className="space-y-4">
-      <h1>Following Feed</h1>
-    </div>
-  );
+  return <h1>Following Feed</h1>;
 }
 
 function Latest() {
-  return (
-    <div className="space-y-4">
-      <h1>Latest Posts</h1>
-    </div>
-  );
+  return <h1>Latest Posts</h1>;
 }
 
 function NotFound() {
   const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    // Start redirecting after 4 seconds
     const timer = setTimeout(() => {
       setRedirecting(true);
     }, 4000);
 
-    // Clean up the timer if the component unmounts
     return () => clearTimeout(timer);
   }, []);
 
   if (redirecting) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
 
   return <div>Page not found. Redirecting to login...</div>;
 }
 
 export default function App() {
+  const authUser = useSelector((state) => state.authUser);
+  const isPreload = useSelector((state) => state.isPreload);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(asyncPreloadProcess());
+  }, [dispatch]);
+
+  if (isPreload) return <h1>loading</h1>;
+
+  if (authUser === undefined || null) {
+    return (
+      <>
+        <Loading />
+        <main>
+          <Routes>
+            <Route path="/*" element={<LoginForm />} />
+            <Route path="/register" element={<RegisterForm />} />
+          </Routes>
+        </main>
+      </>
+    );
+  }
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            isAuthenticated() ? (
+    <>
+      <Loading />
+      <main>
+        <Routes>
+          <Route
+            path="/"
+            element={
               <Layout>
                 <ForYou />
               </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/following"
-          element={
-            isAuthenticated() ? (
+            }
+          />
+          <Route
+            path="/following"
+            element={
               <Layout>
                 <Following />
               </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/latest"
-          element={
-            isAuthenticated() ? (
+            }
+          />
+          <Route
+            path="/latest"
+            element={
               <Layout>
                 <Latest />
               </Layout>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+    </>
   );
 }
