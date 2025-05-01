@@ -1,9 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { BellIcon, MenuIcon, SearchIcon } from 'lucide-react';
+import { MenuIcon, SearchIcon } from 'lucide-react';
 import { Button } from '../ui/button/button';
 import { Input } from '../ui/input';
+import { useSelector } from 'react-redux';
 
 export default function Header() {
+  const authUser = useSelector((state) => state.authUser);
   return (
     <header className="sticky top-0 z-50 border-b bg-white dark:bg-gray-950 dark:border-gray-800">
       <div className="container flex items-center justify-between h-16 px-4 mx-auto">
@@ -25,16 +27,14 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="relative">
-            <BellIcon className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-          </Button>
           <Avatar className="h-8 w-8">
             <AvatarImage
               src="/placeholder.svg?height=32&width=32"
               alt="Pengguna"
             />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarFallback>
+              <img src={authUser.avatar} alt="profile" />
+            </AvatarFallback>
           </Avatar>
         </div>
       </div>

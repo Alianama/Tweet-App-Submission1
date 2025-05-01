@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+#root > div > .loading-bar {
+  z-index: 9999;
+}
 
 @custom-variant dark (&:is(.dark *));
 

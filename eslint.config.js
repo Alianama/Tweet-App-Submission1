@@ -26,7 +26,6 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
-      indent: ['error', 2],
       ...js.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
@@ -36,6 +35,7 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      indent: ['error', 2],
     },
   },
 ];

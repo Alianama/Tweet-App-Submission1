@@ -1,27 +1,38 @@
 import { Card, CardHeader, CardFooter, CardContent } from '../ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar';
 import { Badge } from '../ui/badge/badge';
 import { Button } from '../ui/button/button';
 import {
   HeartIcon,
   MessageCircleIcon,
-  RepeatIcon,
+  HeartOff,
   ShareIcon,
 } from 'lucide-react';
 import PropTypes from 'prop-types';
+import { timeAgo } from '@/lib/timeAgo';
+import { useSelector } from 'react-redux';
+import { Avatar, AvatarImage } from '../ui/avatar';
+import { LoadingBar } from 'react-redux-loading-bar';
+
+
 
 export default function PostCard({ post }) {
+  const detailThread = useSelector((state) => state.threads.detail[post.id]);
+  const authUser = useSelector((state) => state.authUser);
+  const authUserId = authUser.id;
+
+  const hasUpvoted = post.upVotesBy.includes(authUserId);
+  const hasDownvoted = post.downVotesBy.includes(authUserId);
+
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md">
       <CardHeader className="flex flex-row items-center gap-4 p-4">
         <Avatar>
-          <AvatarImage src={post.avatar} alt="Pengguna" />
-          <AvatarFallback>{post.username[0]}</AvatarFallback>
+          <AvatarImage src={detailThread?.owner?.avatar} alt={detailThread?.owner?.name} />
         </Avatar>
         <div>
-          <div className="font-semibold">{post.username}</div>
+          <div className="font-semibold">{detailThread?.owner?.name}</div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {post.timeAgo}
+            {timeAgo(post.createdAt)}
           </div>
         </div>
         <Badge className="ml-auto" variant="outline">
@@ -30,33 +41,35 @@ export default function PostCard({ post }) {
       </CardHeader>
       <CardContent className="p-4 pt-0">
         <h3 className="text-xl font-bold mb-2">{post.title}</h3>
-        <p className="text-gray-600 dark:text-gray-300">{post.description}</p>
+        <p className="text-gray-600 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: `${post.body.substring(0, 269)  }...` }}></p>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-between border-t bg-gray-50 dark:bg-gray-900 dark:border-gray-800">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="sm"
-            className="gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500"
+            className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasUpvoted ? 'text-red-500' : ''}`}
           >
             <HeartIcon className="w-4 h-4" />
-            <span>{post.likes}</span>
+            <span>{post.upVotesBy.length}</span>
           </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasDownvoted ? 'text-pink-500' : ''}`}
+          >
+            <HeartOff className="w-4 h-4" />
+            <span>{post.downVotesBy.length}</span>
+          </Button>
+
           <Button
             variant="ghost"
             size="sm"
             className="gap-1 text-gray-600 dark:text-gray-300"
           >
             <MessageCircleIcon className="w-4 h-4" />
-            <span>{post.shares}</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-1 text-gray-600 dark:text-gray-300"
-          >
-            <RepeatIcon className="w-4 h-4" />
-            <span>3</span>
+            <span>{post.totalComments}</span>
           </Button>
         </div>
         <Button
@@ -73,13 +86,14 @@ export default function PostCard({ post }) {
 
 PostCard.propTypes = {
   post: PropTypes.shape({
-    avatar: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    timeAgo: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    ownerId: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    likes: PropTypes.number.isRequired,
-    shares: PropTypes.number.isRequired,
+    body: PropTypes.string.isRequired,
+    upVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
+    downVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
+    totalComments: PropTypes.number.isRequired,
   }).isRequired,
 };
