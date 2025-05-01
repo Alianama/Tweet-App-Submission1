@@ -7,8 +7,6 @@ import { asyncGetLeaderboards } from '@/store/leaderboards/action';
 export default function Leaderboard() {
   const dispatch = useDispatch();
   const leaderboards = useSelector((state) => state.leaderboards);
-
-
   useEffect(() => {
     dispatch(asyncGetLeaderboards());
   }, [dispatch]);
@@ -36,7 +34,6 @@ export default function Leaderboard() {
           </div>
         </div>
 
-        {/* Top 3 */}
         <div className="mb-6 grid grid-cols-3 gap-4">
           {sortedLeaderboard.slice(0, 3).map((entry, index) => (
             <motion.div
@@ -86,8 +83,6 @@ export default function Leaderboard() {
             </motion.div>
           ))}
         </div>
-
-        {/* Rank 4 and beyond */}
         <div className="space-y-2">
           {sortedLeaderboard.slice(3).map((entry, index) => (
             <motion.div

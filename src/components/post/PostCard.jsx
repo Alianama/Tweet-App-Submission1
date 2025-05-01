@@ -11,9 +11,6 @@ import PropTypes from 'prop-types';
 import { timeAgo } from '@/lib/timeAgo';
 import { useSelector } from 'react-redux';
 import { Avatar, AvatarImage } from '../ui/avatar';
-import { LoadingBar } from 'react-redux-loading-bar';
-
-
 
 export default function PostCard({ post }) {
   const detailThread = useSelector((state) => state.threads.detail[post.id]);
