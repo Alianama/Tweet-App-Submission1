@@ -1,10 +1,12 @@
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { toast } from 'sonner';
 import api from '@/utils/api';
+import { type } from 'os';
 
 const ActionType = {
   RECEIVE_ALL_THREADS: 'RECEIVE_ALL_THREADS',
   RECEIVE_DETAIL_THREADS: 'RECEIVE_DETAIL_THREADS',
+  ADD_THREADS: 'ADD_THREADS',
 };
 
 function receiveAllThreadsActionCreator(threads) {
@@ -21,6 +23,15 @@ function receiveDetailThreadsActionCreator(detailThreads) {
     type: ActionType.RECEIVE_DETAIL_THREADS,
     payload: {
       detailThreads,
+    },
+  };
+}
+
+function addThreadActionCreator(thread) {
+  return {
+    type: ActionType.ADD_THREADS,
+    payload: {
+      thread,
     },
   };
 }
@@ -57,10 +68,26 @@ function asyncGetDetailThreads(id) {
   };
 }
 
+function asyncAddThread({ title, body, category }) {
+  return async (dispatch) => {
+    dispatch(showLoading());
+    try {
+      const thread = await api.createThread({ title, body, category });
+      dispatch(addThreadActionCreator(thread));
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      dispatch(hideLoading());
+    }
+  };
+}
+
 export {
   ActionType,
   receiveAllThreadsActionCreator,
   receiveDetailThreadsActionCreator,
   asyncGetAllThreads,
   asyncGetDetailThreads,
+  asyncAddThread,
+  addThreadActionCreator,
 };
