@@ -146,7 +146,7 @@ const api = (() => {
     getAllThreads,
     createThread,
     getDetailThread,
-    getLeaderboard
+    getLeaderboard,
   };
 })();
 

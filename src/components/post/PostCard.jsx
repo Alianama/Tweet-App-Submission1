@@ -8,37 +8,60 @@ import {
   ShareIcon,
 } from 'lucide-react';
 import PropTypes from 'prop-types';
-import { timeAgo } from '@/lib/timeAgo';
 import { useSelector } from 'react-redux';
 import { Avatar, AvatarImage } from '../ui/avatar';
+import { useNavigate } from 'react-router-dom';
 
 export default function PostCard({ post }) {
   const detailThread = useSelector((state) => state.threads.detail[post.id]);
   const authUser = useSelector((state) => state.authUser);
   const authUserId = authUser.id;
-
   const hasUpvoted = post.upVotesBy.includes(authUserId);
   const hasDownvoted = post.downVotesBy.includes(authUserId);
+  const navigate = useNavigate();
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md">
-      <CardHeader className="flex flex-row items-center gap-4 p-4">
+    <Card className="overflow-hidden hover:scale-[1.01] transition-all duration-300 ease-in-out hover:shadow-md cursor-pointer">
+      <CardHeader
+        onClick={() => navigate(`/post/${post.id}`)}
+        className="flex flex-row items-center gap-4 p-4"
+      >
         <Avatar>
-          <AvatarImage src={detailThread?.owner?.avatar} alt={detailThread?.owner?.name} />
+          <AvatarImage
+            src={detailThread?.owner?.avatar}
+            alt={detailThread?.owner?.name}
+          />
         </Avatar>
         <div>
           <div className="font-semibold">{detailThread?.owner?.name}</div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {timeAgo(post.createdAt)}
+            {new Date(post.createdAt).toLocaleString('id-ID', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
           </div>
         </div>
         <Badge className="ml-auto" variant="outline">
           #{post.category}
         </Badge>
       </CardHeader>
-      <CardContent className="p-4 pt-0">
-        <h3 className="text-xl font-bold mb-2">{post.title}</h3>
-        <p className="text-gray-600 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: `${post.body.substring(0, 269)  }...` }}></p>
+      <CardContent
+        onClick={() => navigate(`/post/${post.id}`)}
+        className="p-4 pt-0"
+      >
+        <h3 className="text-xl hover:text-purple-600 transition-all duration-300 ease-in-out font-bold mb-2">
+          {post.title}
+        </h3>
+        <p
+          className="text-gray-600  dark:text-gray-300"
+          dangerouslySetInnerHTML={{
+            __html: `${post.body.substring(0, 269)}...`,
+          }}
+        ></p>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-between border-t bg-gray-50 dark:bg-gray-900 dark:border-gray-800">
         <div className="flex items-center gap-4">

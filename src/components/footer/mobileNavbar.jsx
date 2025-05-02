@@ -2,7 +2,6 @@ import { Button } from '../ui/button/button';
 import {
   HomeIcon,
   PlusIcon,
-  BellIcon,
   UserIcon,
   SearchIcon,
 } from 'lucide-react';

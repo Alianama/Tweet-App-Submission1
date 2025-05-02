@@ -1,7 +1,6 @@
 import { hideLoading, showLoading } from 'react-redux-loading-bar';
 import api from '@/utils/api';
 import { setAuthUserActionCreator } from '../authUser/action';
-import { toast } from 'sonner';
 
 const ActionType = {
   SET_IS_PRELOAD: 'SET_IS_PRELOAD',
@@ -23,7 +22,7 @@ function asyncPreloadProcess() {
       const authUser = await api.getOwnProfile();
       dispatch(setAuthUserActionCreator(authUser));
     } catch (error) {
-      toast.error(error.message);
+      console.error(error.message);
     } finally {
       dispatch(setIsPreloadActionCreator(false));
     }

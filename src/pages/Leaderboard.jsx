@@ -3,6 +3,7 @@ import { Trophy, Medal } from 'lucide-react';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { asyncGetLeaderboards } from '@/store/leaderboards/action';
+import { LoadingBar } from 'react-redux-loading-bar';
 
 export default function Leaderboard() {
   const dispatch = useDispatch();
@@ -21,8 +22,13 @@ export default function Leaderboard() {
     day: 'numeric',
   });
 
+  if (leaderboards.length === 0) {
+    return <LoadingBar />;
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
+      <title>LeaderBoards</title>
       <div className="w-full max-w-3xl rounded-xl bg-white p-6 shadow-sm">
         <div className="mb-6 flex items-center justify-between">
           <div>
@@ -74,7 +80,9 @@ export default function Leaderboard() {
                 {entry.user.name}
               </h3>
               <div className="mt-1 flex items-center gap-1">
-                <span className="text-lg font-bold text-gray-900">{entry.score}</span>
+                <span className="text-lg font-bold text-gray-900">
+                  {entry.score}
+                </span>
                 <span className="text-xs text-gray-500">pts</span>
               </div>
               <div className="mt-1 rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700">

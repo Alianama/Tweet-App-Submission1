@@ -9,11 +9,7 @@ import Home from './pages/Home';
 import Layout from './pages/Layout';
 import Loading from './components/ui/loading';
 import Leaderboard from './pages/Leaderboard';
-
-
-function Latest() {
-  return <h1>Latest Posts</h1>;
-}
+import DetailPost from './pages/DetailPost';
 
 export default function App() {
   const authUser = useSelector((state) => state.authUser);
@@ -26,9 +22,8 @@ export default function App() {
   }, [dispatch]);
 
   if (isPreload) {
-    return (
-      <Loading/>
-    );
+
+    return <Loading />;
   }
 
   if (authUser === null) {
@@ -64,10 +59,10 @@ export default function App() {
             }
           />
           <Route
-            path="/latest"
+            path="/post/:id"
             element={
               <Layout>
-                <Latest />
+                <DetailPost />
               </Layout>
             }
           />

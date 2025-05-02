@@ -15,12 +15,12 @@ createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <LoadingBar
           style={{
-            backgroundColor: '#4CAF50',
+            backgroundColor: '#9972fe',
             position: 'fixed',
             top: 0,
             left: 0,
             right: 0,
-            zIndex: 50,
+            zIndex: 9999,
           }}
         />
         <Toaster richColors position="top-right" />

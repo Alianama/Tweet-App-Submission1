@@ -4,15 +4,15 @@ import api from '@/utils/api';
 
 const ActionType = {
   RECEIVE_ALL_THREADS: 'RECEIVE_ALL_THREADS',
-  RECEIVE_DETAIL_THREADS: 'RECEIVE_DETAIL_THREADS'
+  RECEIVE_DETAIL_THREADS: 'RECEIVE_DETAIL_THREADS',
 };
 
 function receiveAllThreadsActionCreator(threads) {
   return {
     type: ActionType.RECEIVE_ALL_THREADS,
     payload: {
-      threads
-    }
+      threads,
+    },
   };
 }
 
@@ -25,7 +25,6 @@ function receiveDetailThreadsActionCreator(detailThreads) {
   };
 }
 
-
 function asyncGetAllThreads() {
   return async (dispatch) => {
     dispatch(showLoading());
@@ -36,7 +35,8 @@ function asyncGetAllThreads() {
         dispatch(asyncGetDetailThreads(thread.id));
       }
     } catch (error) {
-      const message = error?.response?.data?.message || error.message || 'Terjadi Kesalahan';
+      const message =
+        error?.response?.data?.message || error.message || 'Terjadi Kesalahan';
       toast.error(message);
     } finally {
       dispatch(hideLoading());
@@ -50,7 +50,8 @@ function asyncGetDetailThreads(id) {
       const response = await api.getDetailThread(id);
       dispatch(receiveDetailThreadsActionCreator(response));
     } catch (error) {
-      const message = error?.response?.data?.message || error.message || 'Terjadi Kesalahan';
+      const message =
+        error?.response?.data?.message || error.message || 'Terjadi Kesalahan';
       toast.error(message);
     }
   };
@@ -61,5 +62,5 @@ export {
   receiveAllThreadsActionCreator,
   receiveDetailThreadsActionCreator,
   asyncGetAllThreads,
-  asyncGetDetailThreads
+  asyncGetDetailThreads,
 };
