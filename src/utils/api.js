@@ -115,7 +115,25 @@ const api = (() => {
     });
 
     const responseJson = await response.json();
-    console.log(response);
+    const { status, message, data } = responseJson;
+
+    if (status !== 'success') {
+      throw new Error(message);
+    }
+
+    return data.thread;
+  }
+
+  async function createThreadComment({ content, threadId }) {
+    const response = await _fetchWithAuth(`${BASE_URL}/threads/${threadId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content }),
+    });
+
+    const responseJson = await response.json();
     const { status, message, data } = responseJson;
 
     if (status !== 'success') {
@@ -148,6 +166,7 @@ const api = (() => {
     createThread,
     getDetailThread,
     getLeaderboard,
+    createThreadComment
   };
 })();
 

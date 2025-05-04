@@ -82,6 +82,20 @@ function asyncAddThread({ title, body, category }) {
   };
 }
 
+function asyncAddThreadComment({ content, threadId }){
+  return  async (dispatch) => {
+    dispatch(showLoading());
+    try {
+      await api.createThreadComment({ content, threadId });
+      dispatch(asyncGetDetailThreads(threadId));
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      dispatch(hideLoading());
+    }
+  };
+}
+
 export {
   ActionType,
   receiveAllThreadsActionCreator,
@@ -90,4 +104,5 @@ export {
   asyncGetDetailThreads,
   asyncAddThread,
   addThreadActionCreator,
+  asyncAddThreadComment
 };

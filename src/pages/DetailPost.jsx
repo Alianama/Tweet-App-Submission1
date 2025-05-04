@@ -19,6 +19,8 @@ import {
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import CommentCard from '@/components/post/CommentCard';
 import CommentFrom from '../components/post/CommentForm';
+import { asyncAddThreadComment } from '@/store/threads/action';
+import { toast } from 'sonner';
 
 export default function DetailPost() {
   const { id } = useParams();
@@ -34,9 +36,13 @@ export default function DetailPost() {
   }, [dispatch, id]);
   console.log(post);
   if (!post) return null;
-
-  const handleComment = (comment) => {
-    alert(comment);
+  const handleComment = async (comment) => {
+    try {
+      await dispatch(asyncAddThreadComment({ content: comment, threadId: id }));
+      toast.success('Post Comment Berhasil');
+    } catch (error) {
+      toast.error('Gagal menambahkan komentar:', error);
+    }
   };
 
   return (

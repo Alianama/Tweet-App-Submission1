@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import { asyncAddThread } from '@/store/threads/action';
 import { useNavigate } from 'react-router-dom';
 import { SendHorizontal } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function AddThreadForm({ onAddThreadsOpen, setOnAddThreadsOpen }) {
   const [title, setTitle] = useState('');
@@ -30,13 +31,14 @@ export default function AddThreadForm({ onAddThreadsOpen, setOnAddThreadsOpen })
     try {
       setLoading(true);
       await dispatch(asyncAddThread({ title, body, category }));
+      toast.success('Post Thread Berhasil');
       navigate('/');
       setTitle('');
       setCategory('');
       setBody('');
       setOnAddThreadsOpen(false);
     } catch (error) {
-      console.error('Gagal menambahkan thread:', error);
+      toast.error('Gagal menambahkan thread:', error);
     } finally {
       setLoading(false);
     }
