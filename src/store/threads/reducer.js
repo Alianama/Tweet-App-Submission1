@@ -21,7 +21,6 @@ function threadsReducer(state = initialState, action = {}) {
         [action.payload.detailThreads.id]: action.payload.detailThreads,
       },
     };
-
   default:
     return state;
   }

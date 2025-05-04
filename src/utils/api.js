@@ -143,6 +143,20 @@ const api = (() => {
     return data.thread;
   }
 
+  async function vote({ threadId, voteType, commetId = null,  }) {
+    const url = commetId === null ? `${BASE_URL}/threads/${threadId}/${voteType}` : `${BASE_URL}/threads/${threadId}/comments/${commetId}/${voteType}`;
+    try {
+      await _fetchWithAuth(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      throw new Error(`Gagal memberikan suara: ${error.message}`);
+    }
+  }
+
   async function getLeaderboard() {
     const response = await _fetchWithAuth(`${BASE_URL}/leaderboards`);
     const responseJson = await response.json();
@@ -166,7 +180,8 @@ const api = (() => {
     createThread,
     getDetailThread,
     getLeaderboard,
-    createThreadComment
+    createThreadComment,
+    vote
   };
 })();
 

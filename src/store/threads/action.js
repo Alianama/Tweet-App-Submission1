@@ -35,6 +35,7 @@ function addThreadActionCreator(thread) {
   };
 }
 
+
 function asyncGetAllThreads() {
   return async (dispatch) => {
     dispatch(showLoading());
@@ -68,19 +69,35 @@ function asyncGetDetailThreads(id) {
 }
 
 function asyncAddThread({ title, body, category }) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     dispatch(showLoading());
+    const tempId = `temp-${Date.now()}`;
+    const authUser = getState().authUser;
+    const optimisticThread = {
+      id: tempId,
+      title,
+      body,
+      category,
+      createdAt: new Date().toISOString(),
+      owner: authUser,
+      upVotesBy: [],
+      downVotesBy: [],
+      totalComments: 0,
+    };
+    dispatch(addThreadActionCreator(optimisticThread));
+
     try {
-      const threads = await api.createThread({ title, body, category });
-      dispatch(addThreadActionCreator(threads));
+      const newThread = await api.createThread({ title, body, category });
+      dispatch(addThreadActionCreator(newThread));
       dispatch(asyncGetAllThreads());
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.message || 'Gagal menambahkan thread');
     } finally {
       dispatch(hideLoading());
     }
   };
 }
+
 
 function asyncAddThreadComment({ content, threadId }){
   return  async (dispatch) => {
@@ -96,6 +113,22 @@ function asyncAddThreadComment({ content, threadId }){
   };
 }
 
+function asyncThreadVote({ threadId, voteType, commetId }){
+  return async (dispatch) => {
+    dispatch(showLoading());
+    try {
+      await api.vote({ threadId, voteType, commetId });
+    } catch (error){
+      toast.error(error);
+    } finally {
+      dispatch(hideLoading());
+    }
+
+  };
+}
+
+
+
 export {
   ActionType,
   receiveAllThreadsActionCreator,
@@ -104,5 +137,6 @@ export {
   asyncGetDetailThreads,
   asyncAddThread,
   addThreadActionCreator,
-  asyncAddThreadComment
+  asyncAddThreadComment,
+  asyncThreadVote
 };
