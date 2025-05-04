@@ -115,6 +115,7 @@ const api = (() => {
     });
 
     const responseJson = await response.json();
+    console.log(response);
     const { status, message, data } = responseJson;
 
     if (status !== 'success') {

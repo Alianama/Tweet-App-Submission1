@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import CommentCard from '@/components/post/CommentCard';
+import CommentFrom from '../components/post/CommentForm';
 
 export default function DetailPost() {
   const { id } = useParams();
@@ -33,6 +34,10 @@ export default function DetailPost() {
   }, [dispatch, id]);
   console.log(post);
   if (!post) return null;
+
+  const handleComment = (comment) => {
+    alert(comment);
+  };
 
   return (
     <div>
@@ -69,6 +74,7 @@ export default function DetailPost() {
             }}
           ></p>
         </CardContent>
+        <CommentFrom onComment={handleComment} />
         <CardFooter className="p-4 flex items-center justify-between border-t bg-gray-50 dark:bg-gray-900 dark:border-gray-800">
           <div className="flex items-center gap-4">
             <Button
