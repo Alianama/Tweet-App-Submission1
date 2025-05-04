@@ -1,7 +1,6 @@
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { toast } from 'sonner';
 import api from '@/utils/api';
-import { type } from 'os';
 
 const ActionType = {
   RECEIVE_ALL_THREADS: 'RECEIVE_ALL_THREADS',
