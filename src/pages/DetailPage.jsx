@@ -2,6 +2,7 @@ import PostCard from '@/components/post/PostCard';
 import {
   asyncDownVoteThreadDetail,
   asyncGetDetailThreads,
+  asyncUpVoteComment,
   asyncUpVoteThreadDetail,
 } from '@/store/threadDetail/action';
 import { useEffect } from 'react';
@@ -18,6 +19,8 @@ function DetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
 
+  console.log(threadDetail);
+
   useEffect(() => {
     if (id) {
       dispatch(asyncGetDetailThreads(id));
@@ -30,6 +33,14 @@ function DetailPage() {
 
   const onDownVote = () => {
     dispatch(asyncDownVoteThreadDetail());
+  };
+
+  const onUpVoteComment = (commentId) => {
+    dispatch(asyncUpVoteComment(commentId));
+  };
+
+  const onDownVoteComment = (commentId) => {
+    alert(commentId);
   };
 
   const handleComment = async (comment) => {
@@ -67,7 +78,12 @@ function DetailPage() {
       <CommentForm onComment={handleComment} />
       <h2 className="font-semibold">{`Komentar (${threadDetail.comments.length})`}</h2>
       {threadDetail.comments.map((comment) => (
-        <CommentCard key={comment.id} comments={comment} />
+        <CommentCard
+          key={comment.id}
+          comments={comment}
+          upVoteComment={onUpVoteComment}
+          downVoteComment={onDownVoteComment}
+        />
       ))}
     </section>
   );

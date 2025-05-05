@@ -11,6 +11,8 @@ const ActionType = {
   TOGGLE_UPVOTE_THREAD_DETAIL: 'TOGGLE_UPVOTE_THREAD_DETAIL',
   CLEAR_THREAD_DETAIL: 'CLEAR_THREAD_DETAIL',
   TOGGLE_DOWNVOTE_THREAD_DETAIL: 'TOGGLE_DOWNVOTE_THREAD_DETAIL',
+  TOGGLE_UPVOTE_COMMENT: 'TOGGLE_UPVOTE_COMMENT',
+  TOGGLE_DOWNVOTE_COMMENT: 'TOGGLE_DOWNVOTE_COMMENT',
 };
 
 function receiveDetailThreadsActionCreator(detailThreads) {
@@ -39,6 +41,20 @@ function toggleDownVoteThreadDetail(userId) {
   return {
     type: ActionType.TOGGLE_DOWNVOTE_THREAD_DETAIL,
     payload: { userId },
+  };
+}
+
+function toggleDownVoteComment({ commentId, userId }) {
+  return {
+    type: ActionType.TOGGLE_DOWNVOTE_COMMENT,
+    payload: { commentId, userId },
+  };
+}
+
+function toggleUpVoteComment({ commentId, userId }) {
+  return {
+    type: ActionType.TOGGLE_UPVOTE_COMMENT,
+    payload: { commentId, userId },
   };
 }
 
@@ -116,6 +132,65 @@ function asyncDownVoteThreadDetail() {
   };
 }
 
+function asyncUpVoteComment(commentId) {
+  return async (dispatch, getState) => {
+    const { authUser, threadDetail } = getState();
+    const comment = threadDetail.comments.find((c) => c.id === commentId);
+    console.log(commentId);
+    const hasUpvoted = comment.upVotesBy.includes(authUser.id);
+
+    dispatch(toggleUpVoteComment({ commentId, userId: authUser.id }));
+
+    try {
+      if (hasUpvoted) {
+        await api.vote({
+          threadId: threadDetail.id,
+          voteType: 'neutral-vote',
+          commentId,
+        });
+      } else {
+        await api.vote({
+          threadId: threadDetail.id,
+          voteType: 'up-vote',
+          commentId,
+        });
+      }
+    } catch (error) {
+      dispatch(toggleUpVoteComment({ commentId, userId: authUser.id }));
+      toast.error('Gagal vote komentar');
+    }
+  };
+}
+
+function asyncDownVoteComment(commentId) {
+  return async (dispatch, getState) => {
+    const { authUser, threadDetail } = getState();
+    const comment = threadDetail.comments.find((c) => c.id === commentId);
+    const hasDownvoted = comment.downVotesBy.includes(authUser.id);
+
+    dispatch(toggleDownVoteComment({ commentId, userId: authUser.id }));
+
+    try {
+      if (hasDownvoted) {
+        await api.vote({
+          threadId: threadDetail.id,
+          voteType: 'neutral-vote',
+          commentId,
+        });
+      } else {
+        await api.vote({
+          threadId: threadDetail.id,
+          voteType: 'down-vote',
+          commentId,
+        });
+      }
+    } catch (error) {
+      dispatch(toggleDownVoteComment({ commentId, userId: authUser.id }));
+      toast.error('Gagal vote komentar');
+    }
+  };
+}
+
 export {
   ActionType,
   receiveDetailThreadsActionCreator,
@@ -124,4 +199,8 @@ export {
   asyncDownVoteThreadDetail,
   toggleDownVoteThreadDetail,
   toggleUpVoteThreadDetail,
+  toggleDownVoteComment,
+  toggleUpVoteComment,
+  asyncUpVoteComment,
+  asyncDownVoteComment,
 };

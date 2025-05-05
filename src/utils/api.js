@@ -146,11 +146,11 @@ const api = (() => {
     return data.thread;
   }
 
-  async function vote({ threadId, voteType, commetId = null }) {
+  async function vote({ threadId, voteType, commentId = null }) {
     const url =
-      commetId === null
+      commentId === null
         ? `${BASE_URL}/threads/${threadId}/${voteType}`
-        : `${BASE_URL}/threads/${threadId}/comments/${commetId}/${voteType}`;
+        : `${BASE_URL}/threads/${threadId}/comments/${commentId}/${voteType}`;
     try {
       await _fetchWithAuth(url, {
         method: 'POST',

@@ -3,11 +3,24 @@ import { useSelector } from 'react-redux';
 import { HeartIcon, HeartOff } from 'lucide-react';
 import PropTypes from 'prop-types';
 
-export default function CommentCard({ comments }) {
-  const authUser = useSelector((state) => state.authUser);
-  const authUserId = authUser.id;
+export default function CommentCard({
+  comments,
+  upVoteComment,
+  downVoteComment,
+}) {
+  const authUserId = useSelector((state) => state.authUser.id);
   const hasUpvoted = comments.upVotesBy.includes(authUserId);
   const hasDownvoted = comments.downVotesBy.includes(authUserId);
+
+  const onUpVoteComment = (event) => {
+    event.stopPropagation();
+    upVoteComment(comments.id);
+  };
+
+  const onDownVoteComment = (event) => {
+    event.stopPropagation();
+    downVoteComment(comments.id);
+  };
 
   return (
     <div className=" shadow-lg p-5 mt-5 rounded-2xl">
@@ -40,6 +53,7 @@ export default function CommentCard({ comments }) {
       </div>
       <div className="flex pt-5 items-start ">
         <Button
+          onClick={onUpVoteComment}
           variant="ghost"
           size="sm"
           className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasUpvoted ? 'text-red-500' : ''}`}
@@ -48,6 +62,7 @@ export default function CommentCard({ comments }) {
           <span>{comments.upVotesBy.length}</span>
         </Button>
         <Button
+          onClick={onDownVoteComment}
           variant="ghost"
           size="sm"
           className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasDownvoted ? 'text-pink-500' : ''}`}
@@ -73,4 +88,7 @@ CommentCard.propTypes = {
     upVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
     downVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
   }).isRequired,
+
+  upVoteComment: PropTypes.func.isRequired,
+  downVoteComment: PropTypes.func.isRequired,
 };
