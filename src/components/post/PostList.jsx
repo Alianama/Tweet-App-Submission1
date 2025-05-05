@@ -7,7 +7,7 @@ export function PostList({ threads, upVote, downVote }) {
       {threads.map((thread) => (
         <PostCard
           key={thread.id}
-          post={thread}
+          {...thread}
           upVote={upVote}
           downVote={downVote}
         />

@@ -11,34 +11,47 @@ import PropTypes from 'prop-types';
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { useNavigate } from 'react-router-dom';
 
-export default function PostCard({ post, upVote, downVote }) {
+export default function PostCard({
+  authUser,
+  body,
+  category,
+  createdAt,
+  downVotesBy,
+  upVotesBy,
+  id,
+  totalComments,
+  title,
+  user,
+  upVote,
+  downVote,
+}) {
   const navigate = useNavigate();
-  const hasUpvoted = post.upVotesBy.includes(post.authUser);
-  const hasDownvoted = post.downVotesBy.includes(post.authUser);
+  const hasUpvoted = upVotesBy.includes(authUser);
+  const hasDownvoted = downVotesBy.includes(authUser);
 
   const onUpVoteClick = (event) => {
     event.stopPropagation();
-    upVote({ threadId: post.id });
+    upVote({ threadId: id });
   };
 
   const onDownVoteClick = (event) => {
     event.stopPropagation();
-    downVote({ threadId: post.id });
+    downVote({ threadId: id });
   };
 
   return (
     <Card className="overflow-hidden hover:scale-[1.01] transition-all duration-300 ease-in-out hover:shadow-md cursor-pointer">
       <CardHeader
-        onClick={() => navigate(`/post/${post.id}`)}
+        onClick={() => navigate(`/post/${id}`)}
         className="flex flex-row items-center gap-4 p-4"
       >
         <Avatar>
-          <AvatarImage src={post.user.avatar} alt={post.user.name} />
+          <AvatarImage src={user.avatar} alt={user.name} />
         </Avatar>
         <div>
-          <div className="font-semibold">{post.user.name}</div>
+          <div className="font-semibold">{user.name}</div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            {new Date(post.createdAt).toLocaleString('id-ID', {
+            {new Date(createdAt).toLocaleString('id-ID', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
@@ -49,20 +62,17 @@ export default function PostCard({ post, upVote, downVote }) {
           </div>
         </div>
         <Badge className="ml-auto" variant="outline">
-          #{post.category}
+          #{category}
         </Badge>
       </CardHeader>
-      <CardContent
-        onClick={() => navigate(`/post/${post.id}`)}
-        className="p-4 pt-0"
-      >
+      <CardContent onClick={() => navigate(`/post/${id}`)} className="p-4 pt-0">
         <h3 className="text-xl hover:text-purple-600 transition-all duration-300 ease-in-out font-bold mb-2">
-          {post.title}
+          {title}
         </h3>
         <p
           className="text-gray-600 dark:text-gray-300"
           dangerouslySetInnerHTML={{
-            __html: `${post.body.substring(0, 269)}...`,
+            __html: `${body.substring(0, 269)}...`,
           }}
         ></p>
       </CardContent>
@@ -75,7 +85,7 @@ export default function PostCard({ post, upVote, downVote }) {
             className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasUpvoted ? 'text-red-500' : ''}`}
           >
             <HeartIcon className="w-4 h-4" />
-            <span>{post.upVotesBy.length}</span>
+            <span>{upVotesBy.length}</span>
           </Button>
 
           <Button
@@ -85,7 +95,7 @@ export default function PostCard({ post, upVote, downVote }) {
             className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-pink-500 ${hasDownvoted ? 'text-pink-500' : ''}`}
           >
             <HeartOff className="w-4 h-4" />
-            <span>{post.downVotesBy.length}</span>
+            <span>{downVotesBy.length}</span>
           </Button>
 
           <Button
@@ -94,7 +104,7 @@ export default function PostCard({ post, upVote, downVote }) {
             className="gap-1 text-gray-600 dark:text-gray-300"
           >
             <MessageCircleIcon className="w-4 h-4" />
-            <span>{post.totalComments}</span>
+            <span>{totalComments}</span>
           </Button>
         </div>
         <Button
