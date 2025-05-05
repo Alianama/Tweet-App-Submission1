@@ -1,6 +1,6 @@
 import { PostList } from '@/components/post/PostList';
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { asyncPopulateUsersAndThreads } from '@/store/shared/action';
 import { asyncThreadDownVote, asyncThreadUpVote } from '@/store/threads/action';
 import { useSearchParams } from 'react-router-dom';
@@ -18,30 +18,32 @@ export default function Home() {
     dispatch(asyncPopulateUsersAndThreads());
   }, [dispatch]);
 
-  const threadList = threads
-    .filter((thread) => !category || thread.category === category)
-    .filter((thread) => {
-      if (!keyword) return true;
-      const lowerKeyword = keyword.toLowerCase();
-      return (
-        thread.title.toLowerCase().includes(lowerKeyword) ||
-      thread.body.toLowerCase().includes(lowerKeyword)
-      );
-    })
-    .map((thread) => ({
-      ...thread,
-      user: users.find((user) => user.id === thread.ownerId),
-      authUser: authUser.id,
-    }));
+  const threadList = useMemo(() => {
+    return threads
+      .filter((thread) => !category || thread.category === category)
+      .filter((thread) => {
+        if (!keyword) return true;
+        const lowerKeyword = keyword.toLowerCase();
+        return (
+          thread.title.toLowerCase().includes(lowerKeyword) ||
+          thread.body.toLowerCase().includes(lowerKeyword)
+        );
+      })
+      .map((thread) => ({
+        ...thread,
+        user: users.find((user) => user.id === thread.ownerId),
+        authUser: authUser.id,
+      }));
+  }, [threads, users, authUser, category, keyword]);
 
 
-  const onUpVote = (threadId) => {
+  const onUpVote = useCallback((threadId) => {
     dispatch(asyncThreadUpVote(threadId));
-  };
+  }, [dispatch]);
 
-  const onDownVote = (threadId) => {
+  const onDownVote = useCallback((threadId) => {
     dispatch(asyncThreadDownVote(threadId));
-  };
+  }, [dispatch]);
 
   return (
     <>
