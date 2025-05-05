@@ -156,6 +156,7 @@ function asyncUpVoteComment(commentId) {
         });
       }
     } catch (error) {
+      console.error(error);
       dispatch(toggleUpVoteComment({ commentId, userId: authUser.id }));
       toast.error('Gagal vote komentar');
     }
@@ -185,6 +186,7 @@ function asyncDownVoteComment(commentId) {
         });
       }
     } catch (error) {
+      console.error(error);
       dispatch(toggleDownVoteComment({ commentId, userId: authUser.id }));
       toast.error('Gagal vote komentar');
     }
