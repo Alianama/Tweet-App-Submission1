@@ -1,15 +1,15 @@
 import { Routes, Route } from 'react-router-dom';
-import RegisterForm from './pages/register';
-import LoginForm from './pages/login';
+import RegisterForm from './pages/RegisterPage';
+import LoginForm from './pages/loginPage';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { asyncPreloadProcess } from './store/isPreload/action';
-import NotFound from './pages/NotFound';
-import Home from './pages/Home';
-import Layout from './pages/Layout';
+import NotFound from './pages/NotFoundPage';
+import Home from './pages/HomePage';
+import Layout from './components/Layout';
 import Loading from './components/ui/loading';
-import Leaderboard from './pages/Leaderboard';
-import DetailPost from './pages/DetailPost';
+import Leaderboard from './pages/LeaderboardPage';
+import DetailPost from './pages/DetailPage';
 
 export default function App() {
   const authUser = useSelector((state) => state.authUser);
