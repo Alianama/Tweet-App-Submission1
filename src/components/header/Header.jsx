@@ -2,16 +2,29 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { MenuIcon, SearchIcon } from 'lucide-react';
 import { Button } from '../ui/button/button';
 import { Input } from '../ui/input';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from '../ui/popover';
+
+import { unsetAuthUserActionCreator } from '@/store/authUser/action';
 
 export default function Header() {
   const authUser = useSelector((state) => state.authUser);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const keyword = e.target.value;
     navigate(`/?keyword=${keyword}`);
+  };
+
+  const handleLogout = () => {
+    dispatch(unsetAuthUserActionCreator());
+    navigate('/');
   };
 
   return (
@@ -21,7 +34,7 @@ export default function Header() {
           <Button onClick={() => alert('halo')} variant="ghost" size="icon" className="md:hidden">
             <MenuIcon className="w-5 h-5" />
           </Button>
-          <h1 onClick={()=> navigate('/')} className="text-xl font-bold bg-gradient-to-r cursor-pointer from-purple-600 to-blue-500 bg-clip-text text-transparent">
+          <h1 onClick={() => navigate('/')} className="text-xl font-bold bg-gradient-to-r cursor-pointer from-purple-600 to-blue-500 bg-clip-text text-transparent">
             PurnamaThread
           </h1>
         </div>
@@ -36,15 +49,40 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage
-              src="/placeholder.svg?height=32&width=32"
-              alt="Pengguna"
-            />
-            <AvatarFallback>
-              <img src={authUser.avatar} alt="profile" />
-            </AvatarFallback>
-          </Avatar>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Avatar className="h-8 w-8 cursor-pointer">
+                <AvatarImage
+                  src={authUser.avatar}
+                  alt={authUser.name}
+                />
+                <AvatarFallback>
+                  {authUser.name[0]}
+                </AvatarFallback>
+              </Avatar>
+            </PopoverTrigger>
+            <PopoverContent className="w-48 flex justify-center flex-col items-center mr-5 text-sm">
+              <div className='flex gap-2 p-2 pb-5 justify-center items-center' >
+                <Avatar className="h-8 w-8 cursor-pointer">
+                  <AvatarImage
+                    src={authUser.avatar}
+                    alt={authUser.name}
+                  />
+                  <AvatarFallback>
+                    {authUser.name[0]}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="font-medium text-gray-800 dark:text-gray-100 mb-2">
+                  {authUser.name}
+                </div>
+              </div>
+
+              <Button variant="outline" className="w-full" onClick={handleLogout}>
+                Logout
+              </Button>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </header>
