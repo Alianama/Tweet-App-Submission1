@@ -53,7 +53,7 @@ export default function AddThreadForm({
         <DialogHeader>
           <DialogTitle>Tambahkan Thread Baru</DialogTitle>
           <DialogDescription>
-            Isi formulir di bawah ini untuk membuat thread baru dalam komunitas.
+            Diskusi Apa lagi nih coba tulis di bawah!
           </DialogDescription>
         </DialogHeader>
 
