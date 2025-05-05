@@ -19,7 +19,7 @@ export default function CommentForm({ onComment }) {
   };
 
   return (
-    <div className="w-full mx-auto p-4 space-y-6">
+    <div className="w-full ">
       <form onSubmit={handleSubmitComment} className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="comment" className="text-sm font-medium">
@@ -30,7 +30,7 @@ export default function CommentForm({ onComment }) {
             placeholder="Tulis komentar Anda di sini..."
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            className="min-h-[100px]"
+            className="min-h-[100px] shadow-md mt-2"
           />
         </div>
         <Button type="submit" disabled={!commentText.trim()}>

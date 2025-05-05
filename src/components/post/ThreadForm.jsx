@@ -30,9 +30,8 @@ export default function AddThreadForm({
 
   const handleSubmit = async () => {
     if (!title.trim() || !body.trim()) return;
-
+    setLoading(true);
     try {
-      setLoading(true);
       await dispatch(asyncAddThread({ title, body, category }));
       toast.success('Post Thread Berhasil');
       navigate('/');
@@ -41,6 +40,7 @@ export default function AddThreadForm({
       setBody('');
       setOnAddThreadsOpen(false);
     } catch (error) {
+      console.log(error);
       toast.error('Gagal menambahkan thread:', error);
     } finally {
       setLoading(false);
@@ -76,6 +76,7 @@ export default function AddThreadForm({
           <Input
             id="tag"
             placeholder="Misalnya: teknologi, hobi, coding"
+            maxLength={20}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           />

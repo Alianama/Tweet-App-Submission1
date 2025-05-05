@@ -67,11 +67,11 @@ function asyncGetAllThreads() {
 }
 
 function asyncAddThread({ title, body, category }) {
+  console.log(title);
   return async (dispatch, getState) => {
     dispatch(showLoading());
-
-    const authUserId = getState().authUser.id;
-    console.log(authUser);
+    const authUser = getState().authUser;
+    const userId = authUser.id;
     const tempId = `temp-${Date.now()}`;
     const optimisticThread = {
       id: tempId,
@@ -79,9 +79,10 @@ function asyncAddThread({ title, body, category }) {
       body,
       category,
       createdAt: new Date().toISOString(),
-      ownerId: authUserId,
+      ownerId: userId,
       upVotesBy: [],
       downVotesBy: [],
+      user: authUser,
     };
 
     dispatch(addThreadActionCreator(optimisticThread));
@@ -90,6 +91,7 @@ function asyncAddThread({ title, body, category }) {
       await api.createThread({ title, body, category });
       dispatch(asyncGetAllThreads());
     } catch (error) {
+      console.error(error);
       toast.error(error?.message || 'Gagal menambahkan thread');
     } finally {
       dispatch(hideLoading());
@@ -169,5 +171,6 @@ export {
   asyncAddThreadComment,
   asyncThreadUpVote,
   toggleUpVoteActionCreator,
+  toggleDownVoteActionCreator,
   asyncThreadDownVote,
 };
