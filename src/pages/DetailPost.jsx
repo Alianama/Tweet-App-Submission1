@@ -24,18 +24,18 @@ import { toast } from 'sonner';
 
 export default function DetailPost() {
   const { id } = useParams();
-  const post = useSelector((state) => state.threads.detail[id]);
+  const threadDetail = useSelector((state) => state.threadDetail);
   const authUser = useSelector((state) => state.authUser);
   const authUserId = authUser.id;
-  const hasUpvoted = post?.upVotesBy?.includes(authUserId);
-  const hasDownvoted = post?.downVotesBy?.includes(authUserId);
+  const hasUpvoted = threadDetail?.upVotesBy?.includes(authUserId);
+  const hasDownvoted = threadDetail?.downVotesBy?.includes(authUserId);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(asyncGetDetailThreads(id));
   }, [dispatch, id]);
-  console.log(post);
-  if (!post) return null;
+  console.log(threadDetail);
+  if (!threadDetail) return null;
   const handleComment = async (comment) => {
     try {
       await dispatch(asyncAddThreadComment({ content: comment, threadId: id }));
@@ -47,16 +47,19 @@ export default function DetailPost() {
 
   return (
     <div>
-      <title>{post.title}</title>
+      <title>{threadDetail.title}</title>
       <Card className="overflow-hidden">
         <CardHeader className="flex flex-row items-center gap-4 p-4">
           <Avatar>
-            <AvatarImage src={post?.owner?.avatar} alt={post?.owner?.name} />
+            <AvatarImage
+              src={threadDetail?.owner?.avatar}
+              alt={threadDetail?.owner?.name}
+            />
           </Avatar>
           <div>
-            <div className="font-semibold">{post?.owner?.name}</div>
+            <div className="font-semibold">{threadDetail?.owner?.name}</div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {new Date(post.createdAt).toLocaleString('id-ID', {
+              {new Date(threadDetail.createdAt).toLocaleString('id-ID', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -70,11 +73,11 @@ export default function DetailPost() {
           <Badge className="ml-auto" variant="outline"></Badge>
         </CardHeader>
         <CardContent className="p-4 pt-0">
-          <h3 className="text-xl font-bold mb-2">{post.title}</h3>
+          <h3 className="text-xl font-bold mb-2">{threadDetail.title}</h3>
           <p
             className="text-gray-600 dark:text-gray-300"
             dangerouslySetInnerHTML={{
-              __html: post.body,
+              __html: threadDetail.body,
             }}
           ></p>
         </CardContent>
@@ -87,7 +90,7 @@ export default function DetailPost() {
               className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasUpvoted ? 'text-red-500' : ''}`}
             >
               <HeartIcon className="w-4 h-4" />
-              <span>{post.upVotesBy.length}</span>
+              <span>{threadDetail.upVotesBy.length}</span>
             </Button>
 
             <Button
@@ -96,7 +99,7 @@ export default function DetailPost() {
               className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasDownvoted ? 'text-pink-500' : ''}`}
             >
               <HeartOff className="w-4 h-4" />
-              <span>{post.downVotesBy.length}</span>
+              <span>{threadDetail.downVotesBy.length}</span>
             </Button>
 
             <Button
@@ -105,7 +108,7 @@ export default function DetailPost() {
               className="gap-1 text-gray-600 dark:text-gray-300"
             >
               <MessageCircleIcon className="w-4 h-4" />
-              <span>{post.comments.length}</span>
+              <span>{threadDetail.comments.length}</span>
             </Button>
           </div>
           <Button
@@ -117,7 +120,7 @@ export default function DetailPost() {
           </Button>
         </CardFooter>
       </Card>
-      {post.comments.map((comment) => (
+      {threadDetail.comments.map((comment) => (
         <CommentCard key={comment.id} comments={comment} />
       ))}
     </div>

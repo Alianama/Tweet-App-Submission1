@@ -70,7 +70,8 @@ function asyncAddThread({ title, body, category }) {
   return async (dispatch, getState) => {
     dispatch(showLoading());
 
-    const authUser = getState().authUser;
+    const authUserId = getState().authUser.id;
+    console.log(authUser);
     const tempId = `temp-${Date.now()}`;
     const optimisticThread = {
       id: tempId,
@@ -78,10 +79,9 @@ function asyncAddThread({ title, body, category }) {
       body,
       category,
       createdAt: new Date().toISOString(),
-      owner: authUser,
+      ownerId: authUserId,
       upVotesBy: [],
       downVotesBy: [],
-      totalComments: 0,
     };
 
     dispatch(addThreadActionCreator(optimisticThread));
@@ -110,40 +110,6 @@ function asyncAddThreadComment({ content, threadId }) {
     }
   };
 }
-
-// function asyncThreadUpVote({ threadId, commentId }) {
-//   return async (dispatch, getState) => {
-//     dispatch(showLoading());
-//     const authUser = getState().authUser;
-//     dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
-//     try {
-//       await api.vote({ threadId, voteType: 'up-vote', commentId });
-//     } catch (error) {
-//       toast.error(error?.message || 'Gagal melakukan vote');
-//       dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
-//     } finally {
-//       dispatch(hideLoading());
-//     }
-//   };
-// }
-
-// function asyncThreadUDownVote({ threadId, commentId }) {
-//   return async (dispatch, getState) => {
-//     dispatch(showLoading());
-//     const authUser = getState().authUser;
-
-//     dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
-
-//     try {
-//       await api.vote({ threadId, voteType: 'down-vote', commentId });
-//     } catch (error) {
-//       toast.error(error?.message || 'Gagal melakukan vote');
-//       dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id })); // revert vote
-//     } finally {
-//       dispatch(hideLoading());
-//     }
-//   };
-// }
 
 function asyncThreadUpVote({ threadId, commentId }) {
   return async (dispatch, getState) => {
