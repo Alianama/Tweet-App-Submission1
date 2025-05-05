@@ -4,6 +4,7 @@ import {
   PlusIcon,
   UserIcon,
   SearchIcon,
+  TrendingUpIcon,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +13,7 @@ export default function MobileNavbar() {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-950 border-t dark:border-gray-800 md:hidden">
       <div className="flex items-center justify-around h-16">
-        <Button onClick={()=> navigate('/')} variant="ghost" size="icon">
+        <Button onClick={() => navigate('/')} variant="ghost" size="icon">
           <HomeIcon className="w-5 h-5" />
         </Button>
         <Button variant="ghost" size="icon">
@@ -24,7 +25,18 @@ export default function MobileNavbar() {
         >
           <PlusIcon className="w-5 h-5" />
         </Button>
-        <Button variant="ghost" size="icon">
+        <Button
+          onClick={() => navigate('/leaderboard')}
+          variant="ghost"
+          className=" justify-start gap-2"
+        >
+          <TrendingUpIcon className="w-5 h-5" />
+        </Button>
+        <Button
+          onClick={() => navigate('/profile')}
+          variant="ghost"
+          size="icon"
+        >
           <UserIcon className="w-5 h-5" />
         </Button>
       </div>

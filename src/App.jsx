@@ -10,6 +10,7 @@ import Layout from './components/Layout';
 import Loading from './components/ui/loading';
 import Leaderboard from './pages/LeaderboardPage';
 import DetailPost from './pages/DetailPage';
+import ProfilPage from './pages/ProfilePage';
 
 export default function App() {
   const authUser = useSelector((state) => state.authUser);
@@ -61,6 +62,14 @@ export default function App() {
             element={
               <Layout>
                 <DetailPost />
+              </Layout>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Layout>
+                <ProfilPage />
               </Layout>
             }
           />

@@ -19,8 +19,6 @@ function DetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  console.log(threadDetail);
-
   useEffect(() => {
     if (id) {
       dispatch(asyncGetDetailThreads(id));
