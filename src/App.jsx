@@ -13,7 +13,6 @@ import DetailPost from './pages/DetailPost';
 
 export default function App() {
   const authUser = useSelector((state) => state.authUser);
-  console.log(authUser);
   const isPreload = useSelector((state) => state.isPreload);
   const dispatch = useDispatch();
 
@@ -22,7 +21,6 @@ export default function App() {
   }, [dispatch]);
 
   if (isPreload) {
-
     return <Loading />;
   }
 

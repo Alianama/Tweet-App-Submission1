@@ -2,7 +2,6 @@ import PostCard from '@/components/post/PostCard';
 import PropTypes from 'prop-types';
 
 export function PostList({ threads, upVote, downVote }) {
-  console.log(threads);
   return (
     <div className="space-y-4">
       {threads.map((thread) => (

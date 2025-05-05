@@ -23,7 +23,9 @@ const store = configureStore({
     leaderboards: leaderboardsReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(loadingBarMiddleware()),
+    getDefaultMiddleware({
+      immutableCheck: false,
+    }).concat(loadingBarMiddleware()),
 });
 
 export default store;
