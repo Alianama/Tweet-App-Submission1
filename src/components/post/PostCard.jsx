@@ -120,21 +120,18 @@ export default function PostCard({
 }
 
 PostCard.propTypes = {
-  post: PropTypes.shape({
-    authUser: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    ownerId: PropTypes.string.isRequired,
-    createdAt: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    body: PropTypes.string.isRequired,
-    upVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
-    downVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
-    totalComments: PropTypes.number.isRequired,
-    user: PropTypes.shape({
-      avatar: PropTypes.string,
-      name: PropTypes.string,
-    }),
+  authUser: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  createdAt: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
+  upVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
+  downVotesBy: PropTypes.arrayOf(PropTypes.string).isRequired,
+  totalComments: PropTypes.number.isRequired,
+  user: PropTypes.shape({
+    avatar: PropTypes.string,
+    name: PropTypes.string,
   }).isRequired,
   upVote: PropTypes.func.isRequired,
   downVote: PropTypes.func.isRequired,
