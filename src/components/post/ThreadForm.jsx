@@ -17,7 +17,10 @@ import { useNavigate } from 'react-router-dom';
 import { SendHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function AddThreadForm({ onAddThreadsOpen, setOnAddThreadsOpen }) {
+export default function AddThreadForm({
+  onAddThreadsOpen,
+  setOnAddThreadsOpen,
+}) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [body, setBody] = useState('');
@@ -55,7 +58,9 @@ export default function AddThreadForm({ onAddThreadsOpen, setOnAddThreadsOpen })
         </DialogHeader>
 
         <div className="space-y-2">
-          <label htmlFor="title" className="text-sm font-medium">Judul</label>
+          <label htmlFor="title" className="text-sm font-medium">
+            Judul
+          </label>
           <Input
             id="title"
             placeholder="Masukkan judul thread"
@@ -65,7 +70,9 @@ export default function AddThreadForm({ onAddThreadsOpen, setOnAddThreadsOpen })
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="tag" className="text-sm font-medium">Kategori</label>
+          <label htmlFor="tag" className="text-sm font-medium">
+            Kategori
+          </label>
           <Input
             id="tag"
             placeholder="Misalnya: teknologi, hobi, coding"
@@ -75,7 +82,9 @@ export default function AddThreadForm({ onAddThreadsOpen, setOnAddThreadsOpen })
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="content" className="text-sm font-medium">Isi Thread</label>
+          <label htmlFor="content" className="text-sm font-medium">
+            Isi Thread
+          </label>
           <Textarea
             id="content"
             placeholder="Tulis isi thread Anda di sini..."

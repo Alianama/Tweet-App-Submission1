@@ -1,11 +1,13 @@
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { toast } from 'sonner';
 import api from '@/utils/api';
+import { asyncGetDetailThreads } from '../threadDetail/action';
 
 const ActionType = {
   RECEIVE_ALL_THREADS: 'RECEIVE_ALL_THREADS',
-  RECEIVE_DETAIL_THREADS: 'RECEIVE_DETAIL_THREADS',
   ADD_THREADS: 'ADD_THREADS',
+  TOGGLE_UPVOTE_THREAD: 'TOGGLE_UPVOTE_THREAD',
+  TOGGLE_DOWNVOTE_THREAD: 'TOGGLE_DOWNVOTE_THREAD',
 };
 
 function receiveAllThreadsActionCreator(threads) {
@@ -13,15 +15,6 @@ function receiveAllThreadsActionCreator(threads) {
     type: ActionType.RECEIVE_ALL_THREADS,
     payload: {
       threads,
-    },
-  };
-}
-
-function receiveDetailThreadsActionCreator(detailThreads) {
-  return {
-    type: ActionType.RECEIVE_DETAIL_THREADS,
-    payload: {
-      detailThreads,
     },
   };
 }
@@ -35,6 +28,25 @@ function addThreadActionCreator(thread) {
   };
 }
 
+function toggleUpVoteActionCreator({ threadId, userId }) {
+  return {
+    type: ActionType.TOGGLE_UPVOTE_THREAD,
+    payload: {
+      threadId,
+      userId,
+    },
+  };
+}
+
+function toggleDownVoteActionCreator({ threadId, userId }) {
+  return {
+    type: ActionType.TOGGLE_DOWNVOTE_THREAD,
+    payload: {
+      threadId,
+      userId,
+    },
+  };
+}
 
 function asyncGetAllThreads() {
   return async (dispatch) => {
@@ -42,12 +54,11 @@ function asyncGetAllThreads() {
     try {
       const response = await api.getAllThreads();
       dispatch(receiveAllThreadsActionCreator(response));
-      for (const thread of response) {
-        dispatch(asyncGetDetailThreads(thread.id));
-      }
     } catch (error) {
       const message =
-        error?.response?.data?.message || error.message || 'Terjadi Kesalahan';
+        error?.response?.data?.message ||
+        error.message ||
+        'Terjadi kesalahan saat memuat threads';
       toast.error(message);
     } finally {
       dispatch(hideLoading());
@@ -55,24 +66,12 @@ function asyncGetAllThreads() {
   };
 }
 
-function asyncGetDetailThreads(id) {
-  return async (dispatch) => {
-    try {
-      const response = await api.getDetailThread(id);
-      dispatch(receiveDetailThreadsActionCreator(response));
-    } catch (error) {
-      const message =
-        error?.response?.data?.message || error.message || 'Terjadi Kesalahan';
-      toast.error(message);
-    }
-  };
-}
-
 function asyncAddThread({ title, body, category }) {
   return async (dispatch, getState) => {
     dispatch(showLoading());
-    const tempId = `temp-${Date.now()}`;
+
     const authUser = getState().authUser;
+    const tempId = `temp-${Date.now()}`;
     const optimisticThread = {
       id: tempId,
       title,
@@ -84,11 +83,11 @@ function asyncAddThread({ title, body, category }) {
       downVotesBy: [],
       totalComments: 0,
     };
+
     dispatch(addThreadActionCreator(optimisticThread));
 
     try {
-      const newThread = await api.createThread({ title, body, category });
-      dispatch(addThreadActionCreator(newThread));
+      await api.createThread({ title, body, category });
       dispatch(asyncGetAllThreads());
     } catch (error) {
       toast.error(error?.message || 'Gagal menambahkan thread');
@@ -98,45 +97,111 @@ function asyncAddThread({ title, body, category }) {
   };
 }
 
-
-function asyncAddThreadComment({ content, threadId }){
-  return  async (dispatch) => {
+function asyncAddThreadComment({ content, threadId }) {
+  return async (dispatch) => {
     dispatch(showLoading());
     try {
       await api.createThreadComment({ content, threadId });
       dispatch(asyncGetDetailThreads(threadId));
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.message || 'Gagal menambahkan komentar');
     } finally {
       dispatch(hideLoading());
     }
   };
 }
 
-function asyncThreadVote({ threadId, voteType, commetId }){
-  return async (dispatch) => {
+// function asyncThreadUpVote({ threadId, commentId }) {
+//   return async (dispatch, getState) => {
+//     dispatch(showLoading());
+//     const authUser = getState().authUser;
+//     dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
+//     try {
+//       await api.vote({ threadId, voteType: 'up-vote', commentId });
+//     } catch (error) {
+//       toast.error(error?.message || 'Gagal melakukan vote');
+//       dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
+//     } finally {
+//       dispatch(hideLoading());
+//     }
+//   };
+// }
+
+// function asyncThreadUDownVote({ threadId, commentId }) {
+//   return async (dispatch, getState) => {
+//     dispatch(showLoading());
+//     const authUser = getState().authUser;
+
+//     dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
+
+//     try {
+//       await api.vote({ threadId, voteType: 'down-vote', commentId });
+//     } catch (error) {
+//       toast.error(error?.message || 'Gagal melakukan vote');
+//       dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id })); // revert vote
+//     } finally {
+//       dispatch(hideLoading());
+//     }
+//   };
+// }
+
+function asyncThreadUpVote({ threadId, commentId }) {
+  return async (dispatch, getState) => {
     dispatch(showLoading());
+    const authUser = getState().authUser;
+    const threads = getState().threads;
+    const thread = threads.find((t) => t.id === threadId);
+    const hasUpvoted = thread.upVotesBy.includes(authUser.id);
+
+    dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
     try {
-      await api.vote({ threadId, voteType, commetId });
-    } catch (error){
-      toast.error(error);
+      if (hasUpvoted) {
+        await api.vote({ threadId, voteType: 'neutral-vote', commentId });
+      } else {
+        await api.vote({ threadId, voteType: 'up-vote', commentId });
+      }
+    } catch (error) {
+      toast.error(error?.message || 'Gagal melakukan vote');
+      dispatch(toggleUpVoteActionCreator({ threadId, userId: authUser.id }));
     } finally {
       dispatch(hideLoading());
     }
-
   };
 }
 
+function asyncThreadDownVote({ threadId, commentId }) {
+  return async (dispatch, getState) => {
+    dispatch(showLoading());
+    const authUser = getState().authUser;
+    const threads = getState().threads;
+    const thread = threads.find((t) => t.id === threadId);
 
+    const hasDownvoted = thread.downVotesBy.includes(authUser.id);
+    dispatch(toggleDownVoteActionCreator({ threadId, userId: authUser.id }));
+
+    try {
+      if (hasDownvoted) {
+        await api.vote({ threadId, voteType: 'neutral-vote', commentId });
+      } else {
+        await api.vote({ threadId, voteType: 'down-vote', commentId });
+      }
+    } catch (error) {
+      toast.error(error?.message || 'Gagal melakukan vote');
+      dispatch(toggleDownVoteActionCreator({ threadId, userId: authUser.id }));
+    } finally {
+      dispatch(hideLoading());
+    }
+  };
+}
 
 export {
   ActionType,
   receiveAllThreadsActionCreator,
-  receiveDetailThreadsActionCreator,
   asyncGetAllThreads,
-  asyncGetDetailThreads,
   asyncAddThread,
   addThreadActionCreator,
   asyncAddThreadComment,
-  asyncThreadVote
+  asyncThreadUpVote,
+  toggleUpVoteActionCreator,
+  asyncThreadDownVote,
 };

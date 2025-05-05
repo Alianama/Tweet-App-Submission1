@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { asyncGetDetailThreads } from '@/store/threads/action';
+import { asyncGetDetailThreads } from '@/store/threadDetail/action';
 import {
   Card,
   CardHeader,
@@ -21,7 +21,6 @@ import CommentCard from '@/components/post/CommentCard';
 import CommentFrom from '../components/post/CommentForm';
 import { asyncAddThreadComment } from '@/store/threads/action';
 import { toast } from 'sonner';
-import useVote from '@/hooks/useVote';
 
 export default function DetailPost() {
   const { id } = useParams();
@@ -31,8 +30,6 @@ export default function DetailPost() {
   const hasUpvoted = post?.upVotesBy?.includes(authUserId);
   const hasDownvoted = post?.downVotesBy?.includes(authUserId);
   const dispatch = useDispatch();
-  const { handleUpvote, handleDownvote, handleNeutralVote } = useVote();
-
 
   useEffect(() => {
     dispatch(asyncGetDetailThreads(id));
@@ -70,8 +67,7 @@ export default function DetailPost() {
               })}
             </div>
           </div>
-          <Badge className="ml-auto" variant="outline">
-          </Badge>
+          <Badge className="ml-auto" variant="outline"></Badge>
         </CardHeader>
         <CardContent className="p-4 pt-0">
           <h3 className="text-xl font-bold mb-2">{post.title}</h3>
@@ -86,7 +82,6 @@ export default function DetailPost() {
         <CardFooter className="p-4 flex items-center justify-between border-t bg-gray-50 dark:bg-gray-900 dark:border-gray-800">
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => hasUpvoted ? handleNeutralVote({ threadId : id }) : handleUpvote({ threadId : id })}
               variant="ghost"
               size="sm"
               className={`gap-1 text-gray-600 dark:text-gray-300 hover:text-red-500 ${hasUpvoted ? 'text-red-500' : ''}`}
