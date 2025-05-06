@@ -67,7 +67,6 @@ function asyncGetAllThreads() {
 }
 
 function asyncAddThread({ title, body, category }) {
-  console.log(title);
   return async (dispatch, getState) => {
     dispatch(showLoading());
     const authUser = getState().authUser;

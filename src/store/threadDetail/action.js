@@ -74,7 +74,7 @@ function asyncGetDetailThreads(id) {
 
 function asyncUpVoteThreadDetail() {
   return async (dispatch, getState) => {
-    dispatch(showLoading);
+    dispatch(showLoading());
     const authUser = getState().authUser;
     const thread = getState().threadDetail;
     const hasUpvoted = thread.upVotesBy.includes(authUser.id);
@@ -104,7 +104,7 @@ function asyncUpVoteThreadDetail() {
 
 function asyncDownVoteThreadDetail() {
   return async (dispatch, getState) => {
-    dispatch(showLoading);
+    dispatch(showLoading());
     const authUser = getState().authUser;
     const thread = getState().threadDetail;
     const hasUpvoted = thread.upVotesBy.includes(authUser.id);
@@ -136,9 +136,7 @@ function asyncUpVoteComment(commentId) {
   return async (dispatch, getState) => {
     const { authUser, threadDetail } = getState();
     const comment = threadDetail.comments.find((c) => c.id === commentId);
-    console.log(commentId);
     const hasUpvoted = comment.upVotesBy.includes(authUser.id);
-
     dispatch(toggleUpVoteComment({ commentId, userId: authUser.id }));
 
     try {

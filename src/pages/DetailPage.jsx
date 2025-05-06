@@ -1,5 +1,6 @@
 import PostCard from '@/components/post/PostCard';
 import {
+  asyncDownVoteComment,
   asyncDownVoteThreadDetail,
   asyncGetDetailThreads,
   asyncUpVoteComment,
@@ -38,7 +39,7 @@ function DetailPage() {
   };
 
   const onDownVoteComment = (commentId) => {
-    alert(commentId);
+    dispatch(asyncDownVoteComment(commentId));
   };
 
   const handleComment = async (comment) => {
