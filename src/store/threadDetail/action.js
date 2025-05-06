@@ -61,6 +61,7 @@ function toggleUpVoteComment({ commentId, userId }) {
 function asyncGetDetailThreads(id) {
   return async (dispatch) => {
     dispatch(clearThreadDetailActionCreator());
+    dispatch(showLoading());
     try {
       const response = await api.getDetailThread(id);
       dispatch(receiveDetailThreadsActionCreator(response));
@@ -68,6 +69,8 @@ function asyncGetDetailThreads(id) {
       const message =
         error?.response?.data?.message || error.message || 'Terjadi Kesalahan';
       toast.error(message);
+    } finally {
+      dispatch(hideLoading());
     }
   };
 }
