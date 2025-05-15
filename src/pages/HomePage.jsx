@@ -8,9 +8,9 @@ import { useSearchParams } from 'react-router-dom';
 export default function Home() {
   const dispatch = useDispatch();
   const threads = useSelector((state) => state.threads);
-  const users = useSelector((state) => state.users);
+  const allUsers = useSelector((state) => state.allUsers);
   const authUser = useSelector((state) => state.authUser);
-  const [searchParams,] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const category = searchParams.get('category');
   const keyword = searchParams.get('keyword');
 
@@ -31,19 +31,24 @@ export default function Home() {
       })
       .map((thread) => ({
         ...thread,
-        user: users.find((user) => user.id === thread.ownerId),
+        user: allUsers.find((user) => user.id === thread.ownerId),
         authUser: authUser.id,
       }));
-  }, [threads, users, authUser, category, keyword]);
+  }, [threads, allUsers, authUser, category, keyword]);
 
+  const onUpVote = useCallback(
+    (threadId) => {
+      dispatch(asyncThreadUpVote(threadId));
+    },
+    [dispatch]
+  );
 
-  const onUpVote = useCallback((threadId) => {
-    dispatch(asyncThreadUpVote(threadId));
-  }, [dispatch]);
-
-  const onDownVote = useCallback((threadId) => {
-    dispatch(asyncThreadDownVote(threadId));
-  }, [dispatch]);
+  const onDownVote = useCallback(
+    (threadId) => {
+      dispatch(asyncThreadDownVote(threadId));
+    },
+    [dispatch]
+  );
 
   return (
     <>

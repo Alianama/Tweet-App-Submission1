@@ -1,7 +1,7 @@
 import api from '@/utils/api';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';
 import { receiveAllThreadsActionCreator } from '../threads/action';
-import { receiveUsersActionCreator } from '../users/action';
+import { receiveAllUsersActionCreator } from '../allUsers/action';
 import { toast } from 'sonner';
 
 function asyncPopulateUsersAndThreads() {
@@ -10,9 +10,8 @@ function asyncPopulateUsersAndThreads() {
     try {
       const users = await api.getAllUsers();
       const threads = await api.getAllThreads();
-
       dispatch(receiveAllThreadsActionCreator(threads));
-      dispatch(receiveUsersActionCreator(users));
+      dispatch(receiveAllUsersActionCreator(users));
     } catch (error) {
       toast.error(error.message);
     } finally {
