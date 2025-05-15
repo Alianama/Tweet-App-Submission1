@@ -1,3 +1,14 @@
+/**
+ * test scenarios for asyncAddThread
+ *
+ * - asyncAddThread thunk
+ *   - should dispatch showLoading and hideLoading properly
+ *   - should optimistically dispatch addThreadActionCreator on success
+ *   - should call api.createThread and api.getAllThreads when successful
+ *   - should show toast error when api.createThread fails
+ *   - should not crash and still call hideLoading when error occurs
+ */
+
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import api from '@/utils/api';
 import { asyncAddThread } from './action';

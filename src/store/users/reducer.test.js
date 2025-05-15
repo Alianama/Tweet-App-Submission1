@@ -1,3 +1,11 @@
+/**
+ * test scenarios for userReducer
+ *
+ * - userReducer reducer
+ *   - should return initial state when given unknown action type
+ *   - should return users array when given RECEIVE_USERS action
+ */
+
 import { describe, it, expect } from 'vitest';
 import userReducer from './reducer';
 import { ActionType } from './action';

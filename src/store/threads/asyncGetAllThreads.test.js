@@ -1,3 +1,13 @@
+/**
+ * test scenarios for asyncGetAllThreads
+ *
+ * - asyncGetAllThreads thunk
+ *   - should dispatch showLoading before fetching threads
+ *   - should call API getAllThreads and dispatch receiveAllThreadsActionCreator on success
+ *   - should dispatch hideLoading after successful data fetch
+ *   - should call toast.error and dispatch hideLoading when API call fails
+ */
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import api from '@/utils/api';
 import { asyncGetAllThreads, receiveAllThreadsActionCreator } from './action';

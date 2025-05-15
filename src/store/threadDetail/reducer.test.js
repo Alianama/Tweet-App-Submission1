@@ -1,3 +1,15 @@
+/**
+ * test scenarios for detailThreadsReducer
+ *
+ * - should return initial state for unknown action
+ * - should handle RECEIVE_DETAIL_THREADS to set detail thread data
+ * - should handle CLEAR_THREAD_DETAIL to reset state to null
+ * - should toggle upvote on thread detail (add/remove userId)
+ * - should toggle downvote on thread detail (add/remove userId)
+ * - should toggle upvote on comments (add/remove userId)
+ * - should toggle downvote on comments (add/remove userId)
+ */
+
 import { describe, it, expect } from 'vitest';
 import detailThreadsReducer from './reducer';
 import { ActionType } from './action';

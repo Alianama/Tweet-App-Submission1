@@ -1,3 +1,11 @@
+/**
+ * test scenarios for allUserReducer
+ *
+ * - allUserReducer reducer
+ *   - should return the initial state when given an unknown action type
+ *   - should update state with all users when given RECEIVE_ALL_USERS action
+ */
+
 import { describe, it, expect } from 'vitest';
 import allUserReducer from './reducer';
 import { ActionType } from './action';

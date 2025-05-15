@@ -1,3 +1,11 @@
+/**
+ * test scenarios for asyncPopulateUsersAndThreads thunk
+ *
+ * - asyncPopulateUsersAndThreads
+ *   - should dispatch showLoading, receiveAllThreads, receiveAllUsers, and hideLoading when API calls succeed
+ *   - should dispatch showLoading, call toast.error, and dispatch hideLoading when API calls fail
+ */
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import api from '@/utils/api';
 import { asyncPopulateUsersAndThreads } from './action';

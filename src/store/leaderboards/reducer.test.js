@@ -1,3 +1,11 @@
+/**
+ * test scenarios for leaderboardsReducer
+ *
+ * - leaderboardsReducer
+ *   - should return initial state when given unknown action
+ *   - should handle RECEIVE_LEADERBOARDS by replacing the state with the leaderboards payload
+ */
+
 import { describe, it, expect } from 'vitest';
 import leaderboardsReducer from './reducer';
 import { ActionType } from './action';

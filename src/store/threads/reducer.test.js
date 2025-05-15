@@ -1,3 +1,16 @@
+/**
+ * test scenarios for threadsReducer
+ *
+ * - threadsReducer
+ *   - should return the initial state when given unknown action
+ *   - should handle RECEIVE_ALL_THREADS by replacing the state with threads payload
+ *   - should handle ADD_THREADS by adding a new thread at the beginning of the state
+ *   - should handle TOGGLE_UPVOTE_THREAD by adding userId to upVotesBy and removing from downVotesBy
+ *   - should handle TOGGLE_UPVOTE_THREAD by removing userId from upVotesBy if already present
+ *   - should handle TOGGLE_DOWNVOTE_THREAD by adding userId to downVotesBy and removing from upVotesBy
+ *   - should handle TOGGLE_DOWNVOTE_THREAD by removing userId from downVotesBy if already present
+ */
+
 import { describe, it, expect } from 'vitest';
 import threadsReducer from './reducer';
 import { ActionType } from './action';
