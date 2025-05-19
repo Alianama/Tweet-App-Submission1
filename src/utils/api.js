@@ -1,5 +1,5 @@
 const api = (() => {
-  const BASE_URL = 'https://forum-api.dicoding.dev/v1';
+  const BASE_URL = '/v1';
 
   function putAccessToken(token) {
     localStorage.setItem('accessToken', token);

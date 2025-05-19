@@ -23,7 +23,11 @@ createRoot(document.getElementById('root')).render(
             zIndex: 9999,
           }}
         />
-        <Toaster richColors position="top-right" />
+        <Toaster
+          toastOptions={{ role: 'status' }}
+          richColors
+          position="top-right"
+        />
         <App />
       </BrowserRouter>
     </StrictMode>

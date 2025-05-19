@@ -4,9 +4,11 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import daStyle from 'eslint-config-dicodingacademy';
+import pluginCypress from 'eslint-plugin-cypress';
 
 export default [
   daStyle,
+  pluginCypress.configs.recommended,
   { ignores: ['dist'] },
   {
     files: ['**/*.{js,jsx}'],

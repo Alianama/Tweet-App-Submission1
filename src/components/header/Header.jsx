@@ -73,7 +73,7 @@ export default function Header() {
             onClick={handleLogout}
             className="ml-2 flex justify-center items-center"
           >
-            <h1 className="text-xs">Logout</h1> <Power />
+            Logout <Power />
           </Button>
         </div>
       </div>
