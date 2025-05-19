@@ -4,11 +4,10 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import daStyle from 'eslint-config-dicodingacademy';
-// import pluginCypress from 'eslint-plugin-cypress';
+import pluginCypress from 'eslint-plugin-cypress/flat';
 
 export default [
   daStyle,
-  // pluginCypress.configs.recommended,
   { ignores: ['dist'] },
   {
     files: ['**/*.{js,jsx}'],
@@ -23,6 +22,7 @@ export default [
     },
     settings: { react: { version: '18.3' } },
     plugins: {
+      cypress: pluginCypress,
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
