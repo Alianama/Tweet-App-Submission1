@@ -5,7 +5,6 @@
  *   - should display alert when password is empty
  *   - should display alert when username and password are wrong
  *   - should display homepage when username and password are correct
- *   - should not be able to access home page before login
  *   - should be able to logout
  */
 
