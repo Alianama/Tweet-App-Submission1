@@ -41,6 +41,7 @@ function asyncSetAuthUser({ email, password }) {
 function asyncUnsetAuthUser() {
   return (dispatch) => {
     dispatch(unsetAuthUserActionCreator());
+    toast.success('Logout Berhasil');
     api.putAccessToken('');
   };
 }

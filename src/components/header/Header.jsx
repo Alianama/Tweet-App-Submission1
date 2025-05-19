@@ -1,16 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { MenuIcon, SearchIcon } from 'lucide-react';
+import { MenuIcon, SearchIcon, Power } from 'lucide-react';
 import { Button } from '../ui/button/button';
 import { Input } from '../ui/input';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from '../ui/popover';
 
-import { unsetAuthUserActionCreator } from '@/store/authUser/action';
+import { asyncUnsetAuthUser } from '@/store/authUser/action';
 
 export default function Header() {
   const authUser = useSelector((state) => state.authUser);
@@ -23,7 +18,7 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    dispatch(unsetAuthUserActionCreator());
+    dispatch(asyncUnsetAuthUser());
     navigate('/');
   };
 
@@ -31,10 +26,18 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b bg-white dark:bg-gray-950 dark:border-gray-800">
       <div className="container flex items-center justify-between h-16 px-4 mx-auto">
         <div className="flex items-center gap-2">
-          <Button onClick={() => alert('halo')} variant="ghost" size="icon" className="md:hidden">
+          <Button
+            onClick={() => alert('halo')}
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+          >
             <MenuIcon className="w-5 h-5" />
           </Button>
-          <h1 onClick={() => navigate('/')} className="text-xl font-bold bg-gradient-to-r cursor-pointer from-purple-600 to-blue-500 bg-clip-text text-transparent">
+          <h1
+            onClick={() => navigate('/')}
+            className="text-xl font-bold bg-gradient-to-r cursor-pointer from-purple-600 to-blue-500 bg-clip-text text-transparent"
+          >
             PurnamaThread
           </h1>
         </div>
@@ -48,41 +51,30 @@ export default function Header() {
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarImage
-                  src={authUser.avatar}
-                  alt={authUser.name}
-                />
-                <AvatarFallback>
-                  {authUser.name[0]}
-                </AvatarFallback>
-              </Avatar>
-            </PopoverTrigger>
-            <PopoverContent className="w-48 flex justify-center flex-col items-center mr-5 text-sm">
-              <div className='flex gap-2 p-2 pb-5 justify-center items-center' >
-                <Avatar className="h-8 w-8 cursor-pointer">
-                  <AvatarImage
-                    src={authUser.avatar}
-                    alt={authUser.name}
-                  />
-                  <AvatarFallback>
-                    {authUser.name[0]}
-                  </AvatarFallback>
-                </Avatar>
-
-                <div className="font-medium text-gray-800 dark:text-gray-100 mb-2">
-                  {authUser.name}
-                </div>
-              </div>
-
-              <Button variant="outline" className="w-full" onClick={handleLogout}>
-                Logout
-              </Button>
-            </PopoverContent>
-          </Popover>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={authUser.avatar} alt={authUser.name} />
+              <AvatarFallback>{authUser.name[0]}</AvatarFallback>
+            </Avatar>
+            <div className="hidden md:flex flex-col text-sm leading-tight">
+              <span className="font-medium text-gray-900 dark:text-gray-100">
+                {authUser.name}
+              </span>
+              <span className="text-gray-500 text-xs dark:text-gray-400">
+                {authUser.email}
+              </span>
+            </div>
+          </div>
+          <Button
+            alt="Logout"
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            className="ml-2 flex justify-center items-center"
+          >
+            <h1 className="text-xs">Logout</h1> <Power />
+          </Button>
         </div>
       </div>
     </header>
