@@ -62,7 +62,7 @@ describe('Login spec', () => {
       .contains(/^Login$/)
       .click();
 
-    // memverifikasi bahwa user sudah berada di halaman home
+    // memverifikasi bahwa user sudah berada di halaman home dengan header tanda nya dan tombol logout
     cy.get('header').should('be.visible');
     cy.get('button').contains('Logout').should('be.visible');
   });
