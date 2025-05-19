@@ -45,6 +45,20 @@ describe('asyncAddThread thunk', () => {
     name: 'Ali Purnama',
   };
 
+  const fakeThreadsResponse = [
+    {
+      id: 'thread-1',
+      title: 'Thread Pertama',
+      body: 'Ini adalah thread pertama',
+      category: 'General',
+      createdAt: '2024-01-01T00:00:00Z',
+      ownerId: 'user-1',
+      upVotesBy: [],
+      downVotesBy: [],
+      comments: [],
+    },
+  ];
+
   it('should dispatch optimistic add and refresh threads on success', async () => {
     api.createThread = () => Promise.resolve({});
     api.getAllThreads = () => Promise.resolve(fakeThreadsResponse);

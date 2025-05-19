@@ -21,13 +21,36 @@ vi.mock('sonner', () => ({
 const fakeThreadsResponse = [
   {
     id: 'thread-1',
-    title: 'Thread 1',
-    body: 'Body 1',
+    title: 'Thread Pertama',
+    body: 'Ini adalah thread pertama',
     category: 'General',
     createdAt: '2024-01-01T00:00:00Z',
     ownerId: 'user-1',
-    upVotesBy: [],
+    upVotesBy: ['user-2', 'user-3'],
+    downVotesBy: ['user-4'],
+    comments: [
+      {
+        id: 'comment-1',
+        content: 'Komentar pertama',
+        createdAt: '2024-01-01T01:00:00Z',
+        owner: {
+          id: 'user-2',
+          name: 'John Doe',
+          avatar: 'https://ui-avatars.com/api/?name=John+Doe',
+        },
+      },
+    ],
+  },
+  {
+    id: 'thread-2',
+    title: 'Thread Kedua',
+    body: 'Ini adalah thread kedua',
+    category: 'Technology',
+    createdAt: '2024-01-02T00:00:00Z',
+    ownerId: 'user-2',
+    upVotesBy: ['user-1'],
     downVotesBy: [],
+    comments: [],
   },
 ];
 
