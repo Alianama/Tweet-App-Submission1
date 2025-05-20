@@ -1,4 +1,4 @@
-import { Button } from './button';
+import { Button } from '../components/ui/button/button';
 
 export default {
   title: 'Components/Button',
@@ -7,7 +7,14 @@ export default {
     onClick: { action: 'clicked' },
     variant: {
       control: { type: 'select' },
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      options: [
+        'default',
+        'destructive',
+        'outline',
+        'secondary',
+        'ghost',
+        'link',
+      ],
     },
     size: {
       control: { type: 'select' },
@@ -27,11 +34,13 @@ Default.args = {
 
 export const Variants = () => (
   <div className="flex gap-3 flex-wrap">
-    {['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'].map((variant) => (
-      <Button key={variant} variant={variant} className="text-sm font-medium">
-        {variant.charAt(0).toUpperCase() + variant.slice(1)}
-      </Button>
-    ))}
+    {['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'].map(
+      (variant) => (
+        <Button key={variant} variant={variant} className="text-sm font-medium">
+          {variant.charAt(0).toUpperCase() + variant.slice(1)}
+        </Button>
+      )
+    )}
   </div>
 );
 
@@ -39,7 +48,13 @@ export const Sizes = () => (
   <div className="flex gap-3 flex-wrap items-center">
     {['default', 'sm', 'lg', 'icon'].map((size) => (
       <Button key={size} size={size} className="text-sm font-medium">
-        {size === 'icon' ? <span role="img" aria-label="icon">🔔</span> : size.charAt(0).toUpperCase() + size.slice(1)}
+        {size === 'icon' ? (
+          <span role="img" aria-label="icon">
+            🔔
+          </span>
+        ) : (
+          size.charAt(0).toUpperCase() + size.slice(1)
+        )}
       </Button>
     ))}
   </div>
