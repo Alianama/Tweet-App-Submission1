@@ -12,13 +12,16 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    proxy: {
-      '/v1': {
-        target: 'https://forum-api.dicoding.dev',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/v1/, '/v1'),
-      },
-    },
+
+    //gunakan ini jika pada saat test kena cors policy
+
+    // proxy: {
+    //   '/v1': {
+    //     target: 'https://forum-api.dicoding.dev',
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/v1/, '/v1'),
+    //   },
+    // },
   },
   plugins: [tailwindcss(), react()],
   test: {
