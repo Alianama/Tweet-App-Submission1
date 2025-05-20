@@ -1,4 +1,4 @@
-import { Input } from './input';
+import { Input } from '../components/ui/input';
 
 export default {
   title: 'UI/Input',
@@ -12,7 +12,7 @@ export default {
     placeholder: {
       control: 'text',
       description: 'Placeholder input',
-      defaultValue: 'Tulis sesuatu...'
+      defaultValue: 'Tulis sesuatu...',
     },
     className: {
       control: 'text',
@@ -38,13 +38,17 @@ const Template = (args) => <Input {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  placeholder: 'Tulis sesuatu...'
+  placeholder: 'Tulis sesuatu...',
 };
 
 export const WarnaCustom = Template.bind({});
 WarnaCustom.args = {
   placeholder: 'Input dengan warna custom',
-  style: { backgroundColor: '#e0f7fa', color: '#006064', border: '2px solid #006064' },
+  style: {
+    backgroundColor: '#e0f7fa',
+    color: '#006064',
+    border: '2px solid #006064',
+  },
 };
 
 export const Invalid = Template.bind({});
